@@ -1,0 +1,19 @@
+{
+  "name": "socket-chat",
+  "version": "1.0.0",
+  "description": "Socket chat app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KishorKumarParoi/socket-chat-app.git"
+  },
+  "author": "Kishor Kumar Paroi <kishor.ruet.cse@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KishorKumarParoi/socket-chat-app/issues"
+  },
+  "homepage": "https://github.com/KishorKumarParoi/socket-chat-app#readme"
+}
