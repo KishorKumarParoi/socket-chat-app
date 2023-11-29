@@ -16,6 +16,9 @@ const mongoose = require('mongoose');
 
 // internal imports
 const { notFoundHandler, errorHandler } = require('./middlewares/common/errorHandler');
+const loginRouter = require('./routers/loginRouter.');
+const inboxRouter = require('./routers/inboxRouter');
+const usersRouter = require('./routers/usersRouter');
 
 // Create Express App
 const app = express();
@@ -43,6 +46,9 @@ app.set('view engine', 'ejs');
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // Routes
+app.use('/', loginRouter);
+app.use('/inbox', inboxRouter);
+app.use('/users', usersRouter);
 
 // error handler
 app.use(notFoundHandler);
