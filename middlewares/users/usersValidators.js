@@ -17,7 +17,7 @@ const addUserValidators = [
   check("email")
     .isEmail()
     .withMessage("Invalid email address")
-    .normalizeEmail()
+    // .normalizeEmail()
     .trim()
     .custom(async (value) => {
       try {
