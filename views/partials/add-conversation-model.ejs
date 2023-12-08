@@ -6,26 +6,17 @@
     </div>
     <div class="modal-body">
       <form id="add-conversation-form">
-        <input
-          type="text"
-          placeholder="Search User by Name or Email or Mobile"
-          name="user"
-          id="user"
-          autocomplete="off"
-        />
+        <input type="text" placeholder="search user by name or email or mobile" name="user" id="user"
+          autocomplete="off" />
         <p class="error"></p>
         <div class="search_users"></div>
         <input type="submit" value="Submit" class="hide" />
-        <input type="text" placeholder="Username" />
-        <input type="button" value="Submit" />
       </form>
     </div>
   </div>
 </div>
-
 <script>
   const modal = document.querySelector("#add-conversation-modal");
-
   // typing detector
   let typingTimer;
   const doneTypingInterval = 500;
@@ -35,7 +26,7 @@
 
   // conversation created failure toast
   const conversationFailureToast = Toastify({
-    text: "Error Creating a conversation!",
+    text: "Error creating a conversation!",
     duration: 1000,
   });
 
@@ -45,25 +36,22 @@
     users_placeholder.style.display = "none";
     input.value = "";
   }
-
   function openModal() {
     modal.style.display = "block";
   }
 
-  // on keyup, start the countdown
-
+  //on keyup, start the countdown
   input.addEventListener("keyup", function () {
     clearTimeout(typingTimer);
     // reset
     users_placeholder.style.display = "none";
 
     if (input.value) {
-      typingTimer = setTimeout(searchUsers, doneTypingInterval);
-      // user has finished typing, now send search Request
+      typingTimer = setTimeout(searchUsers, doneTypingInterval); //user is "finished typing," send search request
     }
   });
 
-  // on keydown, clear the countdown
+  //on keydown, clear the countdown
   input.addEventListener("keydown", function () {
     clearTimeout(typingTimer);
   });
@@ -85,9 +73,9 @@
 
     // handle error and response
     if (result.errors) {
-      const errorPlaceholder = document.querySelector("p.error");
-      errorPlaceholder.textContent = result.errors.common.msg;
-      errorPlaceholder.style.display = "block";
+      const errorplaceholder = document.querySelector("p.error");
+      errorplaceholder.textContent = result.errors.common.msg;
+      errorplaceholder.style.display = "block";
     } else {
       if (result.length > 0) {
         let generatedHtml = "<ul>";
@@ -105,7 +93,6 @@
               </div>
             </li>`;
         });
-
         generatedHtml += "</ul>";
         users_placeholder.innerHTML = generatedHtml;
         users_placeholder.style.display = "block";
@@ -113,7 +100,7 @@
     }
   }
 
-  // CREATE CONVERSATION
+  // create Conversation
   async function createConversation(participant_id, name, avatar) {
     try {
       const response = await fetch("/inbox/conversation", {
@@ -129,12 +116,12 @@
       });
 
       const result = response.json();
+
       if (!result.errors) {
         // reset
         users_placeholder.style.display = "none";
         input.value = name;
-
-        // reload after 1 second
+        // reload the page after 1 second
         setTimeout(() => {
           location.reload();
         }, 1000);

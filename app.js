@@ -13,6 +13,8 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const socketio = require('socket.io');
+const moment = require('moment');
 
 // internal imports
 const { notFoundHandler, errorHandler } = require('./middlewares/common/errorHandler');
@@ -22,7 +24,15 @@ const usersRouter = require('./routers/usersRouter');
 
 // Create Express App
 const app = express();
+const server = http.createServer(app);
 dotenv.config();
+
+// scoket creation
+const io = require('socket.io')(server);
+global.io = io;
+
+// set comment as app locals
+app.locals.moment = moment;
 
 console.log("🚀 ~ file: app.js:20 ~ process.env.APP_NAME:", process.env.APP_NAME)
 

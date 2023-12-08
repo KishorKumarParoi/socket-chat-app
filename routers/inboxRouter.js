@@ -2,16 +2,32 @@
 const express = require("express");
 
 // internal imports
-const { getInbox } = require("../controllers/inboxController");
+const {
+  getInbox,
+  searchUser,
+  addConversation,
+  getMessages,
+  sendMessage,
+} = require("../controllers/inboxController");
 const decorateHtmlResponse = require("../middlewares/common/decorateHtmlResponse");
 const { checkLogin } = require("../middlewares/common/checkLogin");
-// router setup
+const attachmentUpload = require("../middlewares/inbox/attachmentUpload");
+
 const router = express.Router();
 
-// page_title
-const page_title = "Inbox";
+// inbox page
+router.get("/", decorateHtmlResponse("Inbox"), checkLogin, getInbox);
 
-// router middleware
-router.get("/", decorateHtmlResponse(page_title), checkLogin, getInbox);
+// search user for conversation
+router.post("/search", checkLogin, searchUser);
+
+// add conversation
+router.post("/conversation", checkLogin, addConversation);
+
+// get messages of a conversation
+router.get("/messages/:conversation_id", checkLogin, getMessages);
+
+// send message
+router.post("/message", checkLogin, attachmentUpload, sendMessage);
 
 module.exports = router;
