@@ -1,0 +1,93 @@
+<%- include('./partials/header.ejs'); %>
+
+  <div class="manageUser-container">
+    <div id="title">
+      <h2>Manage Users</h2>
+    </div>
+
+    <div class="new-message-container new-user">
+      <a href="#" onclick="openModal()">+</a>
+    </div>
+
+    <div id="users-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Manage</th>
+          </tr>
+        </thead>
+        <tbody id="users-table">
+          <% users.forEach(function(user) { %>
+            <tr id="<%= user._id %>">
+              <td class="name">
+                <% if (user.avatar) { %>
+                  <img src="./uploads/avatars/<%= user.avatar %>" />
+                  <% } else { %>
+                    <img src="./images/nophoto.png" />
+                    <% } %>
+                      <span>
+                        <%= user.name %>
+                      </span>
+              </td>
+              <td>
+                <%= user.email %>
+              </td>
+              <td class="manage">
+                <img src="./images/trash.png" alt="Delete" onclick="deleteUser('<%= user._id %>')" />
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <%- include('./partials/add-user-modal.ejs'); %>
+
+    <script>
+      // Toasts
+      const deleteToast = Toastify({
+        text: "User was deleted successfully! Reloading the list...",
+        duration: 3000,
+        close: true,
+        stopOnFocus: true,
+      });
+
+      const deleteErrorToast = Toastify({
+        text: "Error deleting user",
+        duration: 3000,
+        close: true,
+        stopOnFocus: true,
+      });
+
+      async function deleteUser(userId) {
+        let response = await fetch(`/users/${userId}`, {
+          method: 'DELETE',
+        });
+
+
+        let result = await response.json();
+
+        if (result.errors) {
+          // error
+          deleteErrorToast.showToast();
+        } else {
+          // success
+          deleteToast.showToast();
+        }
+
+        // remove the user from the table
+        const userRow = document.getElementById(userId);
+        userRow.remove();
+
+        // reload the page after 1 second
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+      }
+    </script>
+    </body>
+
+    </html>
