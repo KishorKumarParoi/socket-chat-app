@@ -1,26 +1,18 @@
-// external imports
 const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
-const path = require("path");
-const { unlink } = require("fs");
 
-// internal imports
-const User = require("../../models/People");
-
+// auth guard to protect routes that need authentication
 const checkLogin = (req, res, next) => {
   let cookies =
     Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
 
   if (cookies) {
     try {
-      const token = cookies[process.env.COOKIE_NAME];
-      // verify the token
+      token = cookies[process.env.COOKIE_NAME];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      // attach the user object to the request object
       req.user = decoded;
 
-      // pass users info to response locals
+      // pass user info to response locals
       if (res.locals.html) {
         res.locals.loggedInUser = decoded;
       }
@@ -32,7 +24,7 @@ const checkLogin = (req, res, next) => {
         res.status(500).json({
           errors: {
             common: {
-              msg: "Authentication failed!",
+              msg: "Authentication failure!",
             },
           },
         });
@@ -43,13 +35,14 @@ const checkLogin = (req, res, next) => {
       res.redirect("/");
     } else {
       res.status(401).json({
-        error: "Authentication failures!",
+        error: "Authetication failure!",
       });
     }
   }
 };
 
-const redirectLoggedIn = (req, res, next) => {
+// redirect already logged in user to inbox pabe
+const redirectLoggedIn = function (req, res, next) {
   let cookies =
     Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
 
@@ -60,7 +53,29 @@ const redirectLoggedIn = (req, res, next) => {
   }
 };
 
+// guard to protect routes that need role based authorization
+function requireRole(role) {
+  return function (req, res, next) {
+    if (req.user.role && role.includes(req.user.role)) {
+      next();
+    } else {
+      if (res.locals.html) {
+        next(createError(401, "You are not authorized to access this page!"));
+      } else {
+        res.status(401).json({
+          errors: {
+            common: {
+              msg: "You are not authorized!",
+            },
+          },
+        });
+      }
+    }
+  };
+}
+
 module.exports = {
   checkLogin,
   redirectLoggedIn,
+  requireRole,
 };

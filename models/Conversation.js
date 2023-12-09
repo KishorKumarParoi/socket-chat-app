@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
 
-const conversationSchema = new mongoose.Schema(
+const conversationSchema = mongoose.Schema(
   {
     creator: {
       id: mongoose.Types.ObjectId,
       name: String,
       avatar: String,
     },
+
     participant: {
       id: mongoose.Types.ObjectId,
       name: String,
@@ -14,7 +15,7 @@ const conversationSchema = new mongoose.Schema(
     },
     last_updated: {
       type: Date,
-      default: Date.now(),
+      default: Date.now,
     },
   },
   {
@@ -23,5 +24,5 @@ const conversationSchema = new mongoose.Schema(
 );
 
 const Conversation = mongoose.model("Conversation", conversationSchema);
-module.exports = Conversation;
 
+module.exports = Conversation;

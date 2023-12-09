@@ -6,33 +6,33 @@ const createError = require("http-errors");
 // internal imports
 const User = require("../models/People");
 
+// get login page
 function getLogin(req, res, next) {
   res.render("index");
 }
 
-// login
+// do login
 async function login(req, res, next) {
-  // find user with email or mobile
   try {
+    // find a user who has this email/username
     const user = await User.findOne({
       $or: [{ email: req.body.username }, { mobile: req.body.username }],
     });
-
-    console.log("🚀 ~ file: loginController.js:12 ~ login ~ user:", user);
 
     if (user && user._id) {
       const isValidPassword = await bcrypt.compare(
         req.body.password,
         user.password
       );
+
       if (isValidPassword) {
         // prepare the user object to generate token
-
         const userObject = {
+          userid: user._id,
           username: user.name,
-          mobile: user.mobile,
           email: user.email,
-          role: "user",
+          avatar: user.avatar || null,
+          role: user.role || "user",
         };
 
         // generate token
@@ -40,7 +40,7 @@ async function login(req, res, next) {
           expiresIn: process.env.JWT_EXPIRY,
         });
 
-        // set the token to cookie
+        // set cookie
         res.cookie(process.env.COOKIE_NAME, token, {
           maxAge: process.env.JWT_EXPIRY,
           httpOnly: true,
@@ -50,7 +50,7 @@ async function login(req, res, next) {
         // set logged in user local identifier
         res.locals.loggedInUser = userObject;
 
-        res.render("inbox");
+        res.redirect("inbox");
       } else {
         throw createError("Login failed! Please try again.");
       }
@@ -71,10 +71,10 @@ async function login(req, res, next) {
   }
 }
 
-// logout
+// do logout
 function logout(req, res) {
   res.clearCookie(process.env.COOKIE_NAME);
-  res.send("logged out!");
+  res.send("logged out");
 }
 
 module.exports = {

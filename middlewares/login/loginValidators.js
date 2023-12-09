@@ -14,8 +14,7 @@ const loginValidators = [
         .trim(),
     check("password")
         .isLength({ min: 1 })
-        .withMessage("Password is required")
-        .trim(),
+        .withMessage("Password is required"),
 ];
 
 const loginValidationHandler = function (req, res, next) { 

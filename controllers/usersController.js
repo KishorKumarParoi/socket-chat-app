@@ -1,8 +1,12 @@
+// external imports
 const bcrypt = require("bcrypt");
-const User = require("../models/People");
-const { unlink } = require('fs');
-const path = require('path');
+const { unlink } = require("fs");
+const path = require("path");
 
+// internal imports
+const User = require("../models/People");
+
+// get users page
 async function getUsers(req, res, next) {
   try {
     const users = await User.find();
@@ -24,13 +28,11 @@ async function addUser(req, res, next) {
       ...req.body,
       avatar: req.files[0].filename,
       password: hashedPassword,
-      confirmPassword: hashedPassword,
     });
   } else {
     newUser = new User({
       ...req.body,
       password: hashedPassword,
-      confirmPassword: hashedPassword,
     });
   }
 
@@ -51,20 +53,25 @@ async function addUser(req, res, next) {
   }
 }
 
-
-async function removeUser(req, res, next) { 
+// remove user
+async function removeUser(req, res, next) {
   try {
-    const _id = req.params.id;
-    const user = await User.findByIdAndDelete(_id);
-    
+    const user = await User.findByIdAndDelete({
+      _id: req.params.id,
+    });
+
+    // remove user avatar if any
     if (user.avatar) {
-      unlink(path.join(__dirname,`/../public/uploads/avatars/${user.avatar}`), (err) => {
-        if (err) console.log(err);
-      });
+      unlink(
+        path.join(__dirname, `/../public/uploads/avatars/${user.avatar}`),
+        (err) => {
+          if (err) console.log(err);
+        }
+      );
     }
 
     res.status(200).json({
-      message: "User was deleted successfully!",
+      message: "User was removed successfully!",
     });
   } catch (err) {
     res.status(500).json({

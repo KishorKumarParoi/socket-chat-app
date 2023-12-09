@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const messageSchema = new mongoose.Schema(
+const messageSchema = mongoose.Schema(
   {
     text: {
       type: String,
@@ -15,14 +15,14 @@ const messageSchema = new mongoose.Schema(
       name: String,
       avatar: String,
     },
-    reciever: {
+    receiver: {
       id: mongoose.Types.ObjectId,
       name: String,
       avatar: String,
     },
     date_time: {
       type: Date,
-      default: Date.now(),
+      default: Date.now,
     },
     conversation_id: {
       type: mongoose.Types.ObjectId,
@@ -35,4 +35,5 @@ const messageSchema = new mongoose.Schema(
 );
 
 const Message = mongoose.model("Message", messageSchema);
+
 module.exports = Message;

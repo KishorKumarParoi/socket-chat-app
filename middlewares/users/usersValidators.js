@@ -1,12 +1,13 @@
 // external imports
 const { check, validationResult } = require("express-validator");
-const path = require("path");
 const createError = require("http-errors");
+const path = require("path");
 const { unlink } = require("fs");
 
 // internal imports
 const User = require("../../models/People");
 
+// add user
 const addUserValidators = [
   check("name")
     .isLength({ min: 1 })
@@ -17,13 +18,12 @@ const addUserValidators = [
   check("email")
     .isEmail()
     .withMessage("Invalid email address")
-    // .normalizeEmail()
     .trim()
     .custom(async (value) => {
       try {
         const user = await User.findOne({ email: value });
         if (user) {
-          throw createError("Email already in use!");
+          throw createError("Email already is use!");
         }
       } catch (err) {
         throw createError(err.message);
@@ -38,7 +38,7 @@ const addUserValidators = [
       try {
         const user = await User.findOne({ mobile: value });
         if (user) {
-          throw createError("Mobile number already in use!");
+          throw createError("Mobile already is use!");
         }
       } catch (err) {
         throw createError(err.message);
@@ -48,34 +48,26 @@ const addUserValidators = [
     .isStrongPassword()
     .withMessage(
       "Password must be at least 8 characters long & should contain at least 1 lowercase, 1 uppercase, 1 number & 1 symbol"
-    )
-    .trim(),
-  check("confirmPassword")
-    .exists()
-    .withMessage("Confirm Password is required")
-    .custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw createError("Password does not match!");
-      }
-      return true;
-    }),
+    ),
 ];
 
 const addUserValidationHandler = function (req, res, next) {
   const errors = validationResult(req);
   const mappedErrors = errors.mapped();
-
   if (Object.keys(mappedErrors).length === 0) {
     next();
   } else {
     // remove uploaded files
     if (req.files.length > 0) {
       const { filename } = req.files[0];
-      const filepath = path.join(__dirname, `/../public/uploads/avatars/${filename}`);
-
-      unlink(filepath, (err) => console.log(err));
+      unlink(
+        path.join(__dirname, `/../public/uploads/avatars/${filename}`),
+        (err) => {
+          if (err) console.log(err);
+        }
+      );
     }
-      
+
     // response the errors
     res.status(500).json({
       errors: mappedErrors,
@@ -83,4 +75,7 @@ const addUserValidationHandler = function (req, res, next) {
   }
 };
 
-module.exports = { addUserValidators, addUserValidationHandler };
+module.exports = {
+  addUserValidators,
+  addUserValidationHandler,
+};

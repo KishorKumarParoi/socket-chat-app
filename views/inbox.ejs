@@ -1,5 +1,4 @@
 <%- include('./partials/header.ejs'); %>
-
   <div id="chat-container">
     <div id="search-container">
       <input type="text" placeholder="Search" />
@@ -69,14 +68,14 @@
       <input type="text" name="message" placeholder="Type a message" autocomplete="off" />
     </form>
 
-
   </div>
+
   <%- include('./partials/add-conversation-model.ejs'); %>
 
-    <!-- import socket io client from cdn -->
-   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQblz" crossorigin="anonymous"></script>
-
-    <script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"
+    integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQblz" crossorigin="anonymous"></script>
+   
+   <script>
 
       const form = document.querySelector('#chat-form');
       const messageContainer = document.querySelector('#chat-message-list');
@@ -228,6 +227,7 @@
       }
 
     </script>
+
     </body>
 
     </html>

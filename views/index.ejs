@@ -8,22 +8,20 @@
     </div>
     <div id="login-form">
       <form method="post" action="/">
-        <input type="text" name="username" placeholder="Enter Mobile Number or Email" value="<%= data.username %>" />
-
-        <% if(errors.username) { %>
+        <input type="text" name="username" placeholder="enter mobile or email" value="<%= data.username %>" />
+        <% if (errors.username) { %>
           <p class="error show">
             <%= errors.username.msg %>
           </p>
           <% } %>
-
-            <input type="password" name="password" placeholder="Enter Password" />
-            <% if(errors.password) { %>
+            <input type="password" name="password" placeholder="enter password" />
+            <% if (errors.password) { %>
               <p class="error show">
                 <%= errors.password.msg %>
               </p>
               <% } %>
 
-                <% if(errors.common) { %>
+                <% if (errors.common) { %>
                   <p class="error show">
                     <%= errors.common.msg %>
                   </p>

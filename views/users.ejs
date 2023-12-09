@@ -1,5 +1,4 @@
 <%- include('./partials/header.ejs'); %>
-
   <div class="manageUser-container">
     <div id="title">
       <h2>Manage Users</h2>
@@ -43,49 +42,34 @@
       </table>
     </div>
   </div>
-
   <%- include('./partials/add-user-modal.ejs'); %>
 
     <script>
-      // Toasts
+      // toasts
       const deleteToast = Toastify({
-        text: "User was deleted successfully! Reloading the list...",
+        text: "User was deleted successfully!",
         duration: 3000,
-        close: true,
-        stopOnFocus: true,
       });
 
       const deleteErrorToast = Toastify({
-        text: "Error deleting user",
+        text: "Could not delete the user!",
         duration: 3000,
-        close: true,
-        stopOnFocus: true,
       });
 
+      // delete user function
       async function deleteUser(userId) {
         let response = await fetch(`/users/${userId}`, {
-          method: 'DELETE',
+          method: "DELETE",
         });
-
 
         let result = await response.json();
 
         if (result.errors) {
-          // error
           deleteErrorToast.showToast();
         } else {
-          // success
           deleteToast.showToast();
+          document.getElementById(userId).remove();
         }
-
-        // remove the user from the table
-        const userRow = document.getElementById(userId);
-        userRow.remove();
-
-        // reload the page after 1 second
-        setTimeout(() => {
-          location.reload();
-        }, 1000);
       }
     </script>
     </body>
